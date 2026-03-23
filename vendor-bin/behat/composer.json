@@ -1,0 +1,7 @@
+{
+    "require-dev": {
+        "behat/behat": "^3.29",
+        "guzzlehttp/guzzle": "^7.10",
+        "phpunit/phpunit": "^12.5"
+    }
+}
