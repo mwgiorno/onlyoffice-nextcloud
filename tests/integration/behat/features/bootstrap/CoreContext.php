@@ -18,8 +18,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class CoreContext implements Context
 {
-    private const TEST_PASSWORD = "password";
-    private const REGULAR_USER = "editortest";
+    const TEST_PASSWORD = "password";
+    const REGULAR_USER = "editortest";
 
     private ResponseInterface $response;
     private ?string $currentUser = null;
