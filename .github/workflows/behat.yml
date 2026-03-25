@@ -42,7 +42,7 @@ jobs:
   behat:
     runs-on: ubuntu-latest
     needs: matrix
-    container: ubuntu:22.04
+    container: node:24
 
     services:
       onlyoffice:
