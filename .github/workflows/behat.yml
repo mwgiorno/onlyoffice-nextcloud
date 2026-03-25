@@ -19,8 +19,8 @@ permissions:
 
 env:
   BEHAT_BASE_URL: http://localhost:8080
-  ONLYOFFICE_DOCUMENT_SERVER_URL: http://onlyoffice
-  ONLYOFFICE_DOCUMENT_SERVER_INTERNAL_URL: http://onlyoffice
+  ONLYOFFICE_DOCUMENT_SERVER_URL: http://onlyoffice/
+  ONLYOFFICE_DOCUMENT_SERVER_INTERNAL_URL: http://onlyoffice/
   ONLYOFFICE_SECRET: secret
 
 jobs:
@@ -99,7 +99,7 @@ jobs:
           php occ config:system:set auth.bruteforce.protection.enabled --value false --type bool
           php occ config:system:set ratelimit.protection.enabled --value false --type bool
           php occ config:system:set trusted_domains 1 --value="$CONTAINER_IP"
-          php occ config:app:set onlyoffice DocumentServerUrl --value="${{ env.ONLYOFFICE_DOCUMENT_SERVER_URL }}/"
+          php occ config:app:set onlyoffice DocumentServerUrl --value="${{ env.ONLYOFFICE_DOCUMENT_SERVER_URL }}"
           php occ config:app:set onlyoffice jwt_secret --value="${{ env.ONLYOFFICE_SECRET }}"
           php occ config:app:set onlyoffice StorageUrl --value="http://$CONTAINER_IP:8080/"
           php occ config:system:set allow_local_remote_servers --value true --type bool
