@@ -2,6 +2,7 @@
 
 ## Changed
 - redesigned the admin settings sections as tabbed navigation
+- changed common and security admin settings to save automatically
 
 ## 9.14.2
 
