@@ -39,6 +39,7 @@ import { t } from '@nextcloud/l10n'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSettingsSelectGroup from '@nextcloud/vue/components/NcSettingsSelectGroup'
 import { clearHistory, saveCommonSettings } from '../../services/SettingsService'
+import { useAutosave } from './useAutosave'
 
 const props = defineProps<{
 	formats: Record<string, Record<string, unknown>>
@@ -105,7 +106,7 @@ const help = ref(props.help)
 const reviewDisplay = ref(props.reviewDisplay)
 const theme = ref(props.theme)
 const unknownAuthor = ref(props.unknownAuthor ?? '')
-const saving = ref(false)
+const clearing = ref(false)
 
 watch(sameTab, (val) => {
 	if (val) enableSharing.value = false
@@ -127,52 +128,50 @@ async function onClearHistory() {
 	})
 	if (!confirmed) return
 
-	saving.value = true
+	clearing.value = true
 	try {
 		await clearHistory()
 		showSuccess(t('onlyoffice', 'All history successfully deleted'))
 	} catch {
 		showError(t('onlyoffice', 'Error'))
 	} finally {
-		saving.value = false
+		clearing.value = false
 	}
 }
 
 /**
- * Persists all common settings to the backend.
+ * Builds the common settings payload from the current form state.
  */
-async function save() {
-	saving.value = true
-	try {
-		await saveCommonSettings({
-			defFormats: defFormats.value,
-			editFormats: editFormats.value,
-			restrictExternalStorage: restrictExternalStorage.value,
-			sameTab: sameTab.value,
-			enableSharing: enableSharing.value,
-			preview: preview.value,
-			advanced: advanced.value,
-			cronChecker: cronChecker.value,
-			emailNotifications: emailNotifications.value,
-			versionHistory: versionHistory.value,
-			limitGroups: useGroups.value ? limitGroups.value : [],
-			chat: chat.value,
-			compactHeader: compactHeader.value,
-			feedback: feedback.value,
-			forcesave: forcesave.value,
-			liveViewOnShare: liveViewOnShare.value,
-			help: help.value,
-			reviewDisplay: reviewDisplay.value,
-			theme: theme.value,
-			unknownAuthor: unknownAuthor.value.trim(),
-		})
-		showSuccess(t('onlyoffice', 'Common settings have been successfully updated'))
-	} catch {
-		showError(t('onlyoffice', 'Error'))
-	} finally {
-		saving.value = false
+function buildPayload() {
+	return {
+		defFormats: defFormats.value,
+		editFormats: editFormats.value,
+		restrictExternalStorage: restrictExternalStorage.value,
+		sameTab: sameTab.value,
+		enableSharing: enableSharing.value,
+		preview: preview.value,
+		advanced: advanced.value,
+		cronChecker: cronChecker.value,
+		emailNotifications: emailNotifications.value,
+		versionHistory: versionHistory.value,
+		limitGroups: useGroups.value ? limitGroups.value : [],
+		chat: chat.value,
+		compactHeader: compactHeader.value,
+		feedback: feedback.value,
+		forcesave: forcesave.value,
+		liveViewOnShare: liveViewOnShare.value,
+		help: help.value,
+		reviewDisplay: reviewDisplay.value,
+		theme: theme.value,
+		unknownAuthor: unknownAuthor.value.trim(),
 	}
 }
+
+useAutosave({
+	build: buildPayload,
+	save: saveCommonSettings,
+	errorMessage: t('onlyoffice', 'Failed to save common settings'),
+})
 </script>
 
 <template>
@@ -242,7 +241,7 @@ async function save() {
 					class="checkbox">
 				<label for="onlyoffice-version-history">{{ t('onlyoffice', 'Keep metadata for each version once the document is edited (it will take up disk space)') }}</label>
 			</span>
-			<NcButton :disabled="saving" @click="onClearHistory">
+			<NcButton :disabled="clearing" @click="onClearHistory">
 				{{ t('onlyoffice', 'Clear') }}
 			</NcButton>
 		</p>
@@ -419,17 +418,6 @@ async function save() {
 				<label for="onlyoffice-theme-default-dark">{{ t('onlyoffice', 'Dark') }}</label>
 			</div>
 		</div>
-
-		<br>
-
-		<p>
-			<NcButton id="onlyoffice-common-save"
-				:disabled="saving"
-				variant="primary"
-				@click="save">
-				{{ t('onlyoffice', 'Save') }}
-			</NcButton>
-		</p>
 	</div>
 </template>
 

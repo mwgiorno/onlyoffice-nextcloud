@@ -34,12 +34,11 @@
 -->
 <script setup lang="ts">
 import { ref } from 'vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSettingsSelectGroup from '@nextcloud/vue/components/NcSettingsSelectGroup'
 import NcSelectTags from '@nextcloud/vue/components/NcSelectTags'
 import { saveSecuritySettings } from '../../services/SettingsService'
+import { useAutosave } from './useAutosave'
 
 interface WatermarkSettings {
 	enabled: boolean
@@ -68,7 +67,6 @@ const props = defineProps<{
 const plugins = ref(props.plugins)
 const macros = ref(props.macros)
 const protection = ref(props.protection)
-const saving = ref(false)
 
 // Copy watermark, converting tag ID arrays from string[] to number[]
 const watermark = ref<WatermarkSettings>({
@@ -88,29 +86,26 @@ const watermark = ref<WatermarkSettings>({
 })
 
 /**
- * Persists all security settings (watermark, plugins, macros, protection) to the backend.
+ * Builds the security settings payload from the current form state.
  */
-async function save() {
-	saving.value = true
-	try {
-		await saveSecuritySettings({
-			watermarks: {
-				...watermark.value,
-				// Convert tag ID arrays back to string[] for PHP
-				allTagsList: watermark.value.allTagsList.map(String),
-				linkTagsList: watermark.value.linkTagsList.map(String),
-			},
-			plugins: plugins.value,
-			macros: macros.value,
-			protection: protection.value,
-		})
-		showSuccess(t('onlyoffice', 'Security settings have been successfully updated'))
-	} catch {
-		showError(t('onlyoffice', 'Error'))
-	} finally {
-		saving.value = false
+function buildPayload() {
+	return {
+		watermarks: {
+			...watermark.value,
+			allTagsList: watermark.value.allTagsList.map(String),
+			linkTagsList: watermark.value.linkTagsList.map(String),
+		},
+		plugins: plugins.value,
+		macros: macros.value,
+		protection: protection.value,
 	}
 }
+
+useAutosave({
+	build: buildPayload,
+	save: saveSecuritySettings,
+	errorMessage: t('onlyoffice', 'Failed to save security settings'),
+})
 </script>
 
 <template>
@@ -279,16 +274,5 @@ async function save() {
 				</template>
 			</template>
 		</div>
-
-		<br>
-
-		<p>
-			<NcButton id="onlyoffice-security-save"
-				:disabled="saving"
-				variant="primary"
-				@click="save">
-				{{ t('onlyoffice', 'Save') }}
-			</NcButton>
-		</p>
 	</div>
 </template>
