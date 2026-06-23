@@ -1,5 +1,8 @@
 # Change Log
 
+## Changed
+- redesigned the admin settings sections as tabbed navigation
+
 ## 9.14.2
 
 ## Changed
