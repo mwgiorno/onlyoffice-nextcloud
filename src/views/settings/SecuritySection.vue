@@ -115,8 +115,6 @@ async function save() {
 
 <template>
 	<div class="section section-onlyoffice section-onlyoffice-watermark">
-		<h2>{{ t('onlyoffice', 'Security') }}</h2>
-
 		<p>
 			<input id="onlyoffice-plugins"
 				v-model="plugins"

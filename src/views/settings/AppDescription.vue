@@ -37,7 +37,7 @@ import { t } from '@nextcloud/l10n'
 </script>
 
 <template>
-	<div>
+	<div class="section">
 		<h2>ONLYOFFICE</h2>
 
 		<div class="onlyoffice-description">
@@ -52,6 +52,14 @@ import { t } from '@nextcloud/l10n'
 </template>
 
 <style scoped>
+.section {
+	padding-bottom: 0;
+}
+
+.section:not(:last-child) {
+	border-bottom: none;
+}
+
 .onlyoffice-description {
 	display: flex;
 	flex-direction: column;
