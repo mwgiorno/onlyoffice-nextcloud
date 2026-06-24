@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "Erabiltzaile-IDa hutsik dago",
     "Saving …": "Gordetzen …",
     "Failed to save common settings": "Ezin izan dira ezarpen orokorrak gorde",
-    "Failed to save security settings": "Ezin izan dira segurtasun-ezarpenak gorde"
+    "Failed to save security settings": "Ezin izan dira segurtasun-ezarpenak gorde",
+    "Apply": "Aplikatu"
 },
 "nplurals=2; plural=(n != 1);");

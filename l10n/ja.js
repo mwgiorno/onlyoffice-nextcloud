@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "ユーザーIDが空です",
     "Saving …": "保存中…",
     "Failed to save common settings": "共通設定の保存に失敗しました",
-    "Failed to save security settings": "セキュリティ設定の保存に失敗しました"
+    "Failed to save security settings": "セキュリティ設定の保存に失敗しました",
+    "Apply": "適用"
 },
 "nplurals=1; plural=0;");

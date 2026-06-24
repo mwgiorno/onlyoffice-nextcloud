@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "A felhasználói azonosító üres",
     "Saving …": "Mentés …",
     "Failed to save common settings": "Az általános beállítások mentése sikertelen",
-    "Failed to save security settings": "A biztonsági beállítások mentése sikertelen"
+    "Failed to save security settings": "A biztonsági beállítások mentése sikertelen",
+    "Apply": "Alkalmaz"
 },
 "nplurals=2; plural=(n != 1);");

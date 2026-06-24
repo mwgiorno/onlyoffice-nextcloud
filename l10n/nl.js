@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "Gebruikers-ID is leeg",
     "Saving …": "Opslaan …",
     "Failed to save common settings": "Kan algemene instellingen niet opslaan",
-    "Failed to save security settings": "Kan beveiligingsinstellingen niet opslaan"
+    "Failed to save security settings": "Kan beveiligingsinstellingen niet opslaan",
+    "Apply": "Toepassen"
 },
 "nplurals=2; plural=(n != 1);");

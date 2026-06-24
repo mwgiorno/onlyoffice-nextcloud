@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "L'ID utente è vuoto",
     "Saving …": "Salvataggio …",
     "Failed to save common settings": "Impossibile salvare le impostazioni comuni",
-    "Failed to save security settings": "Impossibile salvare le impostazioni di sicurezza"
+    "Failed to save security settings": "Impossibile salvare le impostazioni di sicurezza",
+    "Apply": "Applica"
 },
 "nplurals=2; plural=(n != 1);");

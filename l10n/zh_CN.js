@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "用户ID为空",
     "Saving …": "正在保存…",
     "Failed to save common settings": "保存常用设置失败",
-    "Failed to save security settings": "保存安全设置失败"
+    "Failed to save security settings": "保存安全设置失败",
+    "Apply": "应用"
 },
 "nplurals=1; plural=0;");

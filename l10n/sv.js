@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "Användar-ID är tomt",
     "Saving …": "Sparar …",
     "Failed to save common settings": "Det gick inte att spara de allmänna inställningarna",
-    "Failed to save security settings": "Det gick inte att spara säkerhetsinställningarna"
+    "Failed to save security settings": "Det gick inte att spara säkerhetsinställningarna",
+    "Apply": "Verkställ"
 },
 "nplurals=2; plural=(n != 1);");

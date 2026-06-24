@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "Потребителският идентификатор е празен",
     "Saving …": "Запазване …",
     "Failed to save common settings": "Неуспешно запазване на общите настройки",
-    "Failed to save security settings": "Неуспешно запазване на настройките за сигурност"
+    "Failed to save security settings": "Неуспешно запазване на настройките за сигурност",
+    "Apply": "Прилагане"
 },
 "nplurals=2; plural=(n != 1);");

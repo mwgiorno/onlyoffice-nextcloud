@@ -191,6 +191,7 @@ OC.L10N.register(
     "UserId is empty": "L'identificador d'usuari és buit",
     "Saving …": "S'està guardant …",
     "Failed to save common settings": "No s'ha pogut guardar la configuració general",
-    "Failed to save security settings": "No s'ha pogut guardar la configuració de seguretat"
+    "Failed to save security settings": "No s'ha pogut guardar la configuració de seguretat",
+    "Apply": "Aplica"
 },
 "nplurals=2; plural=(n != 1);");
