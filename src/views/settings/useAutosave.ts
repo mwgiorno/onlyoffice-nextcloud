@@ -50,7 +50,7 @@ interface AutosaveOptions<T> {
  *
  * @param options - build/save callbacks, error message and debounce delay
  */
-export function useAutosave<T>(options: AutosaveOptions<T>): { saving: Ref<boolean> } {
+export function useAutosave<T>(options: AutosaveOptions<T>): { saving: Ref<boolean>, flush: () => void } {
 	const { build, save, errorMessage, delay = 700 } = options
 	const saving = ref(false)
 	let lastSaved = JSON.stringify(build())
@@ -95,5 +95,13 @@ export function useAutosave<T>(options: AutosaveOptions<T>): { saving: Ref<boole
 		timer = setTimeout(run, delay)
 	}, { deep: true })
 
-	return { saving }
+	/**
+	 * Saves immediately, bypassing the debounce.
+	 */
+	function flush() {
+		clearTimeout(timer)
+		run()
+	}
+
+	return { saving, flush }
 }

@@ -106,6 +106,8 @@ const help = ref(props.help)
 const reviewDisplay = ref(props.reviewDisplay)
 const theme = ref(props.theme)
 const unknownAuthor = ref(props.unknownAuthor ?? '')
+const appliedUnknownAuthor = ref(props.unknownAuthor ?? '')
+const unknownAuthorDirty = computed(() => unknownAuthor.value !== appliedUnknownAuthor.value)
 const clearing = ref(false)
 
 watch(sameTab, (val) => {
@@ -163,15 +165,23 @@ function buildPayload() {
 		help: help.value,
 		reviewDisplay: reviewDisplay.value,
 		theme: theme.value,
-		unknownAuthor: unknownAuthor.value.trim(),
+		unknownAuthor: appliedUnknownAuthor.value.trim(),
 	}
 }
 
-useAutosave({
+const { flush } = useAutosave({
 	build: buildPayload,
 	save: saveCommonSettings,
 	errorMessage: t('onlyoffice', 'Failed to save common settings'),
 })
+
+/**
+ * Commits the edited author name and saves it immediately.
+ */
+function applyUnknownAuthor() {
+	appliedUnknownAuthor.value = unknownAuthor.value
+	flush()
+}
 </script>
 
 <template>
@@ -263,11 +273,15 @@ useAutosave({
 		</p>
 
 		<p>{{ t('onlyoffice', 'Unknown author display name') }}</p>
-		<p>
+		<p class="onlyoffice-unknown-author">
 			<input id="onlyoffice-unknown-author"
 				v-model="unknownAuthor"
 				type="text"
-				placeholder="">
+				placeholder=""
+				@keyup.enter="applyUnknownAuthor">
+			<NcButton :disabled="!unknownAuthorDirty" @click="applyUnknownAuthor">
+				{{ t('onlyoffice', 'Apply') }}
+			</NcButton>
 		</p>
 
 		<!-- Default formats -->
@@ -422,6 +436,12 @@ useAutosave({
 </template>
 
 <style scoped>
+.onlyoffice-unknown-author {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
 #onlyoffice-enable-sharing-block {
     margin-left: 1.5em;
 }
