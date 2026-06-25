@@ -99,7 +99,6 @@ test.describe('Admin settings', () => {
 			}
 
 			await adminPage.saveCommonSettings()
-			await adminPage.waitForSuccess()
 
 			await adminPage.goto()
 
@@ -130,7 +129,6 @@ test.describe('Admin settings', () => {
 				await adminPage.groupsOption(group).click()
 
 				await adminPage.saveCommonSettings()
-				await adminPage.waitForSuccess()
 
 				await adminPage.goto()
 				await adminPage.openCommonSettings()
@@ -150,7 +148,6 @@ test.describe('Admin settings', () => {
 
 			await adminPage.pluginsLabel().click()
 			await adminPage.saveSecuritySettings()
-			await adminPage.waitForSuccess()
 
 			await adminPage.goto()
 			await expect(checkbox).toBeChecked({ checked: !initial })

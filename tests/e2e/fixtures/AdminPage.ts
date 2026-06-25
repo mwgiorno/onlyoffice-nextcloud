@@ -219,10 +219,18 @@ export class AdminPage {
 	}
 
 	async saveCommonSettings(): Promise<void> {
-		await this.page.locator('#onlyoffice-common-save').click()
+		await this.page.waitForResponse((response) =>
+			response.url().includes('/ajax/settings/common')
+			&& response.request().method() === 'PUT'
+			&& response.ok(),
+		)
 	}
 
 	async saveSecuritySettings(): Promise<void> {
-		await this.page.locator('#onlyoffice-security-save').click()
+		await this.page.waitForResponse((response) =>
+			response.url().includes('/ajax/settings/security')
+			&& response.request().method() === 'PUT'
+			&& response.ok(),
+		)
 	}
 }

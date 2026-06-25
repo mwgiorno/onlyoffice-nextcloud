@@ -33,18 +33,17 @@
   SPDX-License-Identifier: AGPL-3.0-only
 -->
 <script setup lang="ts">
-import { ref } from 'vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { ref, computed } from 'vue'
 import { t } from '@nextcloud/l10n'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcSettingsSelectGroup from '@nextcloud/vue/components/NcSettingsSelectGroup'
 import NcSelectTags from '@nextcloud/vue/components/NcSelectTags'
 import { saveSecuritySettings } from '../../services/SettingsService'
+import { useAutosave } from './useAutosave'
 
 interface WatermarkSettings {
 	enabled: boolean
-	text: string
 	allGroups: boolean
 	allGroupsList: string[]
 	allTags: boolean
@@ -69,12 +68,10 @@ const props = defineProps<{
 const plugins = ref(props.plugins)
 const macros = ref(props.macros)
 const protection = ref(props.protection)
-const saving = ref(false)
 
 // Copy watermark, converting tag ID arrays from string[] to number[]
 const watermark = ref<WatermarkSettings>({
 	enabled: !!(props.watermark.enabled),
-	text: (props.watermark.text as string) ?? '',
 	allGroups: !!(props.watermark.allGroups),
 	allGroupsList: (props.watermark.allGroupsList as string[] | undefined) ?? [],
 	allTags: !!(props.watermark.allTags),
@@ -88,29 +85,39 @@ const watermark = ref<WatermarkSettings>({
 	linkTagsList: ((props.watermark.linkTagsList as string[] | undefined) ?? []).map(Number),
 })
 
+const watermarkText = ref((props.watermark.text as string) ?? '')
+const appliedWatermarkText = ref((props.watermark.text as string) ?? '')
+const watermarkTextDirty = computed(() => watermarkText.value !== appliedWatermarkText.value)
+
 /**
- * Persists all security settings (watermark, plugins, macros, protection) to the backend.
+ * Builds the security settings payload from the current form state.
  */
-async function save() {
-	saving.value = true
-	try {
-		await saveSecuritySettings({
-			watermarks: {
-				...watermark.value,
-				// Convert tag ID arrays back to string[] for PHP
-				allTagsList: watermark.value.allTagsList.map(String),
-				linkTagsList: watermark.value.linkTagsList.map(String),
-			},
-			plugins: plugins.value,
-			macros: macros.value,
-			protection: protection.value,
-		})
-		showSuccess(t('onlyoffice', 'Security settings have been successfully updated'))
-	} catch {
-		showError(t('onlyoffice', 'Error'))
-	} finally {
-		saving.value = false
+function buildPayload() {
+	return {
+		watermarks: {
+			...watermark.value,
+			text: appliedWatermarkText.value,
+			allTagsList: watermark.value.allTagsList.map(String),
+			linkTagsList: watermark.value.linkTagsList.map(String),
+		},
+		plugins: plugins.value,
+		macros: macros.value,
+		protection: protection.value,
 	}
+}
+
+const { flush } = useAutosave({
+	build: buildPayload,
+	save: saveSecuritySettings,
+	errorMessage: t('onlyoffice', 'Failed to save security settings'),
+})
+
+/**
+ * Commits the edited watermark text and saves it immediately.
+ */
+function applyWatermarkText() {
+	appliedWatermarkText.value = watermarkText.value
+	flush()
 }
 </script>
 
@@ -181,11 +188,15 @@ async function save() {
 			<p>
 				{{ t('onlyoffice', 'Supported placeholders') }}: {userId}, {userDisplayName}, {email}, {date}, {themingName}
 			</p>
-			<p>
+			<p class="onlyoffice-watermark-text">
 				<input id="onlyoffice-watermark-text"
-					v-model="watermark.text"
+					v-model="watermarkText"
 					type="text"
-					:placeholder="t('onlyoffice', 'DO NOT SHARE THIS') + ' {userId} {date}'">
+					:placeholder="t('onlyoffice', 'DO NOT SHARE THIS') + ' {userId} {date}'"
+					@keyup.enter="applyWatermarkText">
+				<NcButton :disabled="!watermarkTextDirty" @click="applyWatermarkText">
+					{{ t('onlyoffice', 'Apply') }}
+				</NcButton>
 			</p>
 
 			<br>
@@ -280,16 +291,13 @@ async function save() {
 				</template>
 			</template>
 		</div>
-
-		<br>
-
-		<p>
-			<NcButton id="onlyoffice-security-save"
-				:disabled="saving"
-				variant="primary"
-				@click="save">
-				{{ t('onlyoffice', 'Save') }}
-			</NcButton>
-		</p>
 	</div>
 </template>
+
+<style scoped>
+.onlyoffice-watermark-text {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+</style>
