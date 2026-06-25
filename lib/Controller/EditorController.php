@@ -595,7 +595,8 @@ class EditorController extends Controller {
      */
     #[NoAdminRequired]
     #[PublicPage]
-    public function reference(array $referenceData, ?string $path = null, ?string $link = null): DataResponse {
+    public function reference(?array $referenceData = null, ?string $path = null, ?string $link = null): DataResponse {
+        $referenceData ??= [];
         $this->logger->debug("reference: " . json_encode($referenceData) . " $path");
 
         if (!$this->appConfig->isUserAllowedToUse()) {
@@ -1558,6 +1559,9 @@ class EditorController extends Controller {
      */
     private function getFileIdByLink(string $link): array {
         $path = parse_url($link, PHP_URL_PATH);
+        if (empty($path)) {
+            return [null, true];
+        }
         $encodedPath = array_map(urlencode(...), explode("/", $path));
         $parsedLink = str_replace($path, implode("/", $encodedPath), $link);
         if (filter_var($parsedLink, FILTER_VALIDATE_URL) === false) {

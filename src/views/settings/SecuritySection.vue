@@ -36,6 +36,7 @@
 import { ref, computed } from 'vue'
 import { t } from '@nextcloud/l10n'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcSettingsSelectGroup from '@nextcloud/vue/components/NcSettingsSelectGroup'
 import NcSelectTags from '@nextcloud/vue/components/NcSelectTags'
 import { saveSecuritySettings } from '../../services/SettingsService'
@@ -170,11 +171,11 @@ function applyWatermarkText() {
 			{{ t('onlyoffice', 'Secure view enables you to secure documents by embedding a watermark') }}
 		</p>
 		<p>
-			<input id="onlyoffice-watermark-enabled"
+			<NcCheckboxRadioSwitch id="onlyoffice-watermark-enabled"
 				v-model="watermark.enabled"
-				type="checkbox"
-				class="checkbox">
-			<label for="onlyoffice-watermark-enabled">{{ t('onlyoffice', 'Enable watermarking') }}</label>
+				type="switch">
+				{{ t('onlyoffice', 'Enable watermarking') }}
+			</NcCheckboxRadioSwitch>
 		</p>
 
 		<div v-show="watermark.enabled">

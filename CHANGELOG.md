@@ -3,6 +3,7 @@
 ## Changed
 - redesigned the admin settings sections as tabbed navigation
 - changed common and security admin settings to save automatically
+- added supported languages to the Help Center link
 
 ## 9.14.2
 
