@@ -1,5 +1,8 @@
 # Change Log
 
+## Changed
+- added supported languages to the Help Center link
+
 ## 9.14.2
 
 ## Changed
