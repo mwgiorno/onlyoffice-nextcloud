@@ -33,17 +33,23 @@
   SPDX-License-Identifier: AGPL-3.0-only
 -->
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { loadState } from '@nextcloud/initial-state'
 import { showError } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import TemplateList from '../TemplateList.vue'
+import AppDescription from './AppDescription.vue'
 import ServerSection from './ServerSection.vue'
 import CommonSection from './CommonSection.vue'
 import SecuritySection from './SecuritySection.vue'
+import TabList from '../../components/TabList.vue'
+import TabItem from '../../components/TabItem.vue'
+import { useTabHash } from '../../components/tabs'
 
 const state = loadState<Record<string, unknown>>('onlyoffice', 'admin-settings')
 const showSections = ref(!!(state.successful && (state.documentserver || (state.demo as { enabled: boolean }).enabled)))
+
+const activeTab = useTabHash(['server', 'common', 'security'])
 
 onMounted(() => {
 	if (state.settingsError) {
@@ -62,48 +68,55 @@ function onAddressSaved({ showSections: show }: { showSections: boolean }) {
 
 <template>
 	<div>
-		<ServerSection :documentserver="state.documentserver as string"
-			:documentserver-internal="state.documentserverInternal as string"
-			:storage-url="state.storageUrl as string"
-			:verify-peer-off="state.verifyPeerOff as boolean"
-			:secret="state.secret as string"
-			:jwt-header="state.jwtHeader as string"
-			:demo="state.demo as { enabled: boolean, available: boolean }"
-			@address-saved="onAddressSaved" />
-		<template v-if="showSections">
-			<CommonSection :formats="state.formats as Record<string, Record<string, unknown>>"
-				:restrict-external-storage="state.restrictExternalStorage as boolean"
-				:same-tab="state.sameTab as boolean"
-				:enable-sharing="state.enableSharing as boolean"
-				:preview="state.preview as boolean"
-				:advanced="state.advanced as boolean"
-				:cron-checker="state.cronChecker as boolean"
-				:email-notifications="state.emailNotifications as boolean"
-				:version-history="state.versionHistory as boolean"
-				:limit-groups="state.limitGroups as string[]"
-				:chat="state.chat as boolean"
-				:compact-header="state.compactHeader as boolean"
-				:feedback="state.feedback as boolean"
-				:forcesave="state.forcesave as boolean"
-				:live-view-on-share="state.liveViewOnShare as boolean"
-				:help="state.help as boolean"
-				:review-display="state.reviewDisplay as string"
-				:theme="state.theme as string"
-				:unknown-author="state.unknownAuthor as string" />
-			<div class="section section-onlyoffice section-onlyoffice-templates">
-				<h2>
-					{{ t('onlyoffice', 'Common templates') }}
-					<input id="onlyofficeAddTemplate" type="file" class="hidden-visually">
-					<label for="onlyofficeAddTemplate" class="icon-add" :title="t('onlyoffice', 'Add a new template')" />
-				</h2>
-				<TemplateList />
-			</div>
-			<SecuritySection :plugins="state.plugins as boolean"
-				:macros="state.macros as boolean"
-				:protection="state.protection as string"
-				:watermark="state.watermark as Record<string, unknown>"
-				:tags-enabled="state.tagsEnabled as boolean" />
-		</template>
+		<AppDescription />
+		<TabList v-model="activeTab">
+			<TabItem id="server" :label="t('onlyoffice', 'Server settings')">
+				<ServerSection :documentserver="state.documentserver as string"
+					:documentserver-internal="state.documentserverInternal as string"
+					:storage-url="state.storageUrl as string"
+					:verify-peer-off="state.verifyPeerOff as boolean"
+					:secret="state.secret as string"
+					:jwt-header="state.jwtHeader as string"
+					:demo="state.demo as { enabled: boolean, available: boolean }"
+					@address-saved="onAddressSaved" />
+			</TabItem>
+			<TabItem id="common" :label="t('onlyoffice', 'Common settings')" :disabled="!showSections">
+				<CommonSection :formats="state.formats as Record<string, Record<string, unknown>>"
+					:restrict-external-storage="state.restrictExternalStorage as boolean"
+					:same-tab="state.sameTab as boolean"
+					:enable-sharing="state.enableSharing as boolean"
+					:preview="state.preview as boolean"
+					:advanced="state.advanced as boolean"
+					:cron-checker="state.cronChecker as boolean"
+					:email-notifications="state.emailNotifications as boolean"
+					:version-history="state.versionHistory as boolean"
+					:limit-groups="state.limitGroups as string[]"
+					:chat="state.chat as boolean"
+					:compact-header="state.compactHeader as boolean"
+					:feedback="state.feedback as boolean"
+					:forcesave="state.forcesave as boolean"
+					:live-view-on-share="state.liveViewOnShare as boolean"
+					:help="state.help as boolean"
+					:review-display="state.reviewDisplay as string"
+					:theme="state.theme as string"
+					:unknown-author="state.unknownAuthor as string" />
+				<div class="section section-onlyoffice section-onlyoffice-templates">
+					<h2>
+						{{ t('onlyoffice', 'Common templates') }}
+						<input id="onlyofficeAddTemplate" type="file" class="hidden-visually">
+						<label for="onlyofficeAddTemplate" class="icon-add" :title="t('onlyoffice', 'Add a new template')" />
+					</h2>
+					<TemplateList />
+				</div>
+			</TabItem>
+			<TabItem id="security" :label="t('onlyoffice', 'Security')" :disabled="!showSections">
+				<SecuritySection :plugins="state.plugins as boolean"
+					:macros="state.macros as boolean"
+					:protection="state.protection as string"
+					:watermark="state.watermark as Record<string, unknown>"
+					:tags-enabled="state.tagsEnabled as boolean" />
+			</TabItem>
+		</TabList>
 	</div>
 </template>
 

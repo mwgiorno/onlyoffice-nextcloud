@@ -74,6 +74,30 @@ export class AdminPage {
 		await expect(this.errorToast()).toBeVisible()
 	}
 
+	serverTab(): Locator {
+		return this.page.getByRole('tab', { name: 'Server settings' })
+	}
+
+	commonTab(): Locator {
+		return this.page.getByRole('tab', { name: 'Common settings' })
+	}
+
+	securityTab(): Locator {
+		return this.page.getByRole('tab', { name: 'Security' })
+	}
+
+	async openServerSettings(): Promise<void> {
+		await this.serverTab().click()
+	}
+
+	async openCommonSettings(): Promise<void> {
+		await this.commonTab().click()
+	}
+
+	async openSecuritySettings(): Promise<void> {
+		await this.securityTab().click()
+	}
+
 	commonSettingsSection(): Locator {
 		return this.page.locator('.section-onlyoffice-common')
 	}

@@ -177,8 +177,6 @@ async function save() {
 
 <template>
 	<div class="section section-onlyoffice section-onlyoffice-common">
-		<h2>{{ t('onlyoffice', 'Common settings') }}</h2>
-
 		<!-- Group access restriction -->
 		<p>
 			<input id="onlyoffice-groups"
