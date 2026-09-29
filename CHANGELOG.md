@@ -1,5 +1,10 @@
 # Change Log
 
+## 10.2.2
+
+### Changed
+- testing the publish workflow
+
 ## 10.2.1
 
 ### Changed
